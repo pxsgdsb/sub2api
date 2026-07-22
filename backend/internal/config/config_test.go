@@ -46,6 +46,25 @@ func TestLoadRedisUsernameFromEnvironment(t *testing.T) {
 	require.Equal(t, "app-user", cfg.Redis.Username)
 }
 
+func TestLoadServerPortFromRenderPortFallback(t *testing.T) {
+	resetViperWithJWTSecret(t)
+	t.Setenv("PORT", "10000")
+
+	cfg, err := Load()
+	require.NoError(t, err)
+	require.Equal(t, 10000, cfg.Server.Port)
+}
+
+func TestLoadServerPortPrefersServerPortOverRenderPort(t *testing.T) {
+	resetViperWithJWTSecret(t)
+	t.Setenv("PORT", "10000")
+	t.Setenv("SERVER_PORT", "9090")
+
+	cfg, err := Load()
+	require.NoError(t, err)
+	require.Equal(t, 9090, cfg.Server.Port)
+}
+
 func TestLoadHTTPIngressSafetyDefaults(t *testing.T) {
 	resetViperWithJWTSecret(t)
 	cfg, err := Load()
@@ -1145,6 +1164,16 @@ func TestGetServerAddressFromEnv(t *testing.T) {
 	address := GetServerAddress()
 	if address != "127.0.0.1:9090" {
 		t.Fatalf("GetServerAddress() = %q", address)
+	}
+}
+
+func TestGetServerAddressFromRenderPortFallback(t *testing.T) {
+	t.Setenv("SERVER_HOST", "0.0.0.0")
+	t.Setenv("PORT", "10000")
+
+	address := GetServerAddress()
+	if address != "0.0.0.0:10000" {
+		t.Fatalf("GetServerAddress() = %q, want 0.0.0.0:10000", address)
 	}
 }
 

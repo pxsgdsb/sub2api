@@ -87,6 +87,23 @@ func TestSetupMigrationTimeout(t *testing.T) {
 	})
 }
 
+func TestGetServerPortFromEnvUsesRenderPortFallback(t *testing.T) {
+	t.Setenv("PORT", "10000")
+
+	if got := getServerPortFromEnv(8080); got != 10000 {
+		t.Fatalf("getServerPortFromEnv()=%d, want 10000", got)
+	}
+}
+
+func TestGetServerPortFromEnvPrefersServerPort(t *testing.T) {
+	t.Setenv("PORT", "10000")
+	t.Setenv("SERVER_PORT", "9090")
+
+	if got := getServerPortFromEnv(8080); got != 9090 {
+		t.Fatalf("getServerPortFromEnv()=%d, want 9090", got)
+	}
+}
+
 func TestWriteConfigFileKeepsDefaultUserConcurrency(t *testing.T) {
 	t.Setenv("RUN_MODE", "simple")
 	t.Setenv("DATA_DIR", t.TempDir())

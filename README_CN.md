@@ -16,6 +16,8 @@
 
 [English](README.md) | 中文 | [日本語](README_JA.md)
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/pxsgdsb/sub2api)
+
 </div>
 
 
@@ -307,7 +309,66 @@ curl -sSL https://raw.githubusercontent.com/Wei-Shaw/sub2api/main/deploy/install
 
 ---
 
-### 方式二：Docker Compose（推荐）
+### 方式二：Render（Blueprint + 外部 PostgreSQL/Redis）
+
+本仓库已内置 `render.yaml`（Render Blueprint）。配置方式与 `PUASERVICE/sub2api-codex` 保持一致，使用拆分式环境变量。
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/pxsgdsb/sub2api)
+
+推荐外部服务：
+- PostgreSQL：Supabase
+- Redis：Upstash
+
+Blueprint 不会把密钥写入仓库。请在 Render 控制台填写以下变量：
+
+```bash
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+DATABASE_DBNAME=
+DATABASE_HOST=
+DATABASE_PASSWORD=
+DATABASE_USER=
+JWT_SECRET=
+REDIS_HOST=
+REDIS_PASSWORD=
+SERVER_FRONTEND_URL=
+TOTP_ENCRYPTION_KEY=
+```
+
+以下变量已由 `render.yaml` 预设：
+
+```bash
+AUTO_SETUP=true
+DATABASE_PORT=5432
+DATABASE_SSLMODE=require
+PORT=10000
+REDIS_DB=0
+REDIS_ENABLE_TLS=true
+REDIS_PORT=6379
+SERVER_PORT=10000
+```
+
+连接字段示例：
+
+```bash
+DATABASE_HOST=db.example.supabase.co
+DATABASE_USER=postgres
+DATABASE_PASSWORD=your-database-password
+DATABASE_DBNAME=postgres
+REDIS_HOST=your-redis-host.upstash.io
+REDIS_PASSWORD=your-redis-password
+SERVER_FRONTEND_URL=https://your-service.onrender.com
+```
+
+部署步骤：
+1. 点击 Deploy to Render 按钮，选择你的仓库。
+2. 使用 `render.yaml` 创建 Web Service。
+3. 在 Render 控制台填写必需的环境变量。
+4. 部署完成后访问 Render 分配的服务地址。
+
+---
+
+### 方式三：Docker Compose（推荐）
 
 使用 Docker Compose 部署，包含 PostgreSQL 和 Redis 容器。
 
@@ -484,7 +545,7 @@ rm -rf data/ postgres_data/ redis_data/
 
 ---
 
-### 方式三：Apple container（macOS）
+### 方式四：Apple container（macOS）
 
 Apple 芯片 Mac 在 macOS 26 上可使用 Apple `container` 1.1.0 或更高版本运行完整的 Sub2API、PostgreSQL 和 Redis：
 
@@ -500,7 +561,7 @@ cd sub2api/deploy
 
 ---
 
-### 方式四：源码编译
+### 方式五：源码编译
 
 从源码编译安装，适合开发或定制需求。
 

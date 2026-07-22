@@ -16,6 +16,8 @@
 
 English | [中文](README_CN.md) | [日本語](README_JA.md)
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/pxsgdsb/sub2api)
+
 </div>
 
 ## ⚠️ Important Notice
@@ -304,7 +306,66 @@ curl -sSL https://raw.githubusercontent.com/Wei-Shaw/sub2api/main/deploy/install
 
 ---
 
-### Method 2: Docker Compose (Recommended)
+### Method 2: Render (Blueprint + External PostgreSQL/Redis)
+
+This repository includes a `render.yaml` Blueprint for Render deployment. It uses the same split environment variable configuration style as `PUASERVICE/sub2api-codex`.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/pxsgdsb/sub2api)
+
+Recommended external services:
+- PostgreSQL: Supabase
+- Redis: Upstash
+
+The Blueprint keeps secret values out of the repository. Fill the following variables in the Render Dashboard:
+
+```bash
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+DATABASE_DBNAME=
+DATABASE_HOST=
+DATABASE_PASSWORD=
+DATABASE_USER=
+JWT_SECRET=
+REDIS_HOST=
+REDIS_PASSWORD=
+SERVER_FRONTEND_URL=
+TOTP_ENCRYPTION_KEY=
+```
+
+These values are preconfigured by `render.yaml`:
+
+```bash
+AUTO_SETUP=true
+DATABASE_PORT=5432
+DATABASE_SSLMODE=require
+PORT=10000
+REDIS_DB=0
+REDIS_ENABLE_TLS=true
+REDIS_PORT=6379
+SERVER_PORT=10000
+```
+
+Connection field examples:
+
+```bash
+DATABASE_HOST=db.example.supabase.co
+DATABASE_USER=postgres
+DATABASE_PASSWORD=your-database-password
+DATABASE_DBNAME=postgres
+REDIS_HOST=your-redis-host.upstash.io
+REDIS_PASSWORD=your-redis-password
+SERVER_FRONTEND_URL=https://your-service.onrender.com
+```
+
+Deployment steps:
+1. Click the Deploy to Render button and select your repository.
+2. Create the Web Service from `render.yaml`.
+3. Fill the required environment variables in Render.
+4. Deploy and open the Render service URL.
+
+---
+
+### Method 3: Docker Compose (Recommended)
 
 Deploy with Docker Compose, including PostgreSQL and Redis containers.
 
@@ -469,7 +530,7 @@ rm -rf data/ postgres_data/ redis_data/
 
 ---
 
-### Method 3: Apple container (macOS)
+### Method 4: Apple container (macOS)
 
 Apple-silicon Macs running macOS 26 can run the full Sub2API, PostgreSQL, and Redis stack with Apple `container` 1.1.0 or newer:
 
@@ -485,7 +546,7 @@ This is an operator-managed local workflow; Docker Compose remains the recommend
 
 ---
 
-### Method 4: Build from Source
+### Method 5: Build from Source
 
 Build and run from source code for development or customization.
 

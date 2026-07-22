@@ -547,6 +547,16 @@ func getEnvIntOrDefault(key string, defaultValue int) int {
 	return defaultValue
 }
 
+func getServerPortFromEnv(defaultValue int) int {
+	if val := os.Getenv("SERVER_PORT"); val != "" {
+		if i, err := strconv.Atoi(val); err == nil {
+			return i
+		}
+		return defaultValue
+	}
+	return getEnvIntOrDefault("PORT", defaultValue)
+}
+
 // AutoSetupFromEnv performs automatic setup using environment variables
 // This is designed for Docker deployment where all config is passed via env vars
 func AutoSetupFromEnv() error {
@@ -583,7 +593,7 @@ func AutoSetupFromEnv() error {
 		},
 		Server: ServerConfig{
 			Host: getEnvOrDefault("SERVER_HOST", "0.0.0.0"),
-			Port: getEnvIntOrDefault("SERVER_PORT", 8080),
+			Port: getServerPortFromEnv(8080),
 			Mode: getEnvOrDefault("SERVER_MODE", "release"),
 		},
 		JWT: JWTConfig{

@@ -1,0 +1,54 @@
+services:
+  - type: web
+    name: sub2api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    envVars:
+      # Server
+      - key: PORT
+        value: "10000"
+      - key: SERVER_PORT
+        value: "10000"
+      - key: SERVER_FRONTEND_URL
+        sync: false
+      - key: AUTO_SETUP
+        value: "true"
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+
+      # Database
+      - key: DATABASE_HOST
+        sync: false
+      - key: DATABASE_PORT
+        value: "5432"
+      - key: DATABASE_USER
+        sync: false
+      - key: DATABASE_PASSWORD
+        sync: false
+      - key: DATABASE_DBNAME
+        sync: false
+      - key: DATABASE_SSLMODE
+        value: "require"
+
+      # Redis
+      - key: REDIS_HOST
+        sync: false
+      - key: REDIS_PORT
+        value: "6379"
+      - key: REDIS_PASSWORD
+        sync: false
+      - key: REDIS_DB
+        value: "0"
+      - key: REDIS_ENABLE_TLS
+        value: "true"
+
+      # Security
+      - key: JWT_SECRET
+        sync: false
+      - key: TOTP_ENCRYPTION_KEY
+        sync: false

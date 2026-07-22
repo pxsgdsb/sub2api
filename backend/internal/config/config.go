@@ -1641,6 +1641,9 @@ func load(allowMissingJWTSecret bool) (*Config, error) {
 	if err := viper.BindEnv("server.enable_server_timing", "ENABLE_SERVER_TIMING"); err != nil {
 		return nil, fmt.Errorf("bind ENABLE_SERVER_TIMING: %w", err)
 	}
+	if err := viper.BindEnv("server.port", "SERVER_PORT", "PORT"); err != nil {
+		return nil, fmt.Errorf("bind SERVER_PORT/PORT: %w", err)
+	}
 
 	// 默认值
 	setDefaults()
@@ -3461,9 +3464,10 @@ func GetServerAddress() string {
 	v.AddConfigPath("./config")
 	v.AddConfigPath("/etc/sub2api")
 
-	// Support SERVER_HOST and SERVER_PORT environment variables
+	// Support SERVER_HOST plus SERVER_PORT/PORT environment variables.
 	v.AutomaticEnv()
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	_ = v.BindEnv("server.port", "SERVER_PORT", "PORT")
 	v.SetDefault("server.host", "0.0.0.0")
 	v.SetDefault("server.port", 8080)
 
