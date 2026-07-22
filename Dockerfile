@@ -25,6 +25,7 @@ ARG NPM_CONFIG_REGISTRY
 
 WORKDIR /app/frontend
 ENV NODE_OPTIONS=--max-old-space-size=4096
+ENV VITE_ENABLE_CHECKER=false
 
 # Install pnpm (pinned to v9 to match CI and keep builds reproducible)
 RUN corepack enable && corepack prepare pnpm@9 --activate
@@ -42,7 +43,7 @@ RUN --mount=type=cache,id=sub2api-pnpm-store,target=/root/.local/share/pnpm/stor
 # Copy only that subtree to keep the build dependency minimal.
 COPY frontend/ ./
 COPY docs/legal/ /app/docs/legal/
-RUN pnpm run build
+RUN pnpm exec vite build
 
 # -----------------------------------------------------------------------------
 # Stage 2: Backend Builder
