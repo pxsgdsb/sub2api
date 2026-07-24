@@ -44,8 +44,12 @@ services:
         sync: false
       - key: REDIS_DB
         value: "0"
+      - key: REDIS_POOL_SIZE
+        value: "20"
+      - key: REDIS_MIN_IDLE_CONNS
+        value: "0"
       - key: REDIS_ENABLE_TLS
-        value: "true"
+        value: "false"
 
       # Security
       - key: JWT_SECRET
